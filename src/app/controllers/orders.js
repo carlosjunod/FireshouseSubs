@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const router = express.Router();
 
 // Importing Models
-const Product = mongoose.model('Product');
-const Order = mongoose.model('Order');
+const Product = require('../models/Product');
+
+// const Order = mongoose.model('Order');
 
 module.exports = function(app){
 	app.use('/api/v1', router);
@@ -25,9 +26,12 @@ module.exports = function(app){
   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   router.get('/products', (req, res) => {
     console.log("Getting all products! 🙌")
-    Product.find()
-    .exec((err, products) => {
-      res.json(products)
+    Product.findAll((successData) => {
+      console.log(successData);
+      res.status(200).json(successData);
+    }, (errorData) => {
+      console.error(errorData);
+      res.status(500).json(errorData);
     })
   })
 

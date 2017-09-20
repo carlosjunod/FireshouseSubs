@@ -1,4 +1,5 @@
-var mongoose = require('mongoose');
+// var mongoose = require('mongoose')
+var Sequelize = require('sequelize')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -7,9 +8,20 @@ if(NODE_ENV === 'development') {
 }
 
 if(NODE_ENV === 'development') {
-  console.log('IM HEREE!!!!!!!! ', NODE_ENV )
-  mongoose.connect('mongodb://'+ process.env.MONGO_HOST +'/'+ process.env.MONGO_DATABASE)
+  var sequelize = new Sequelize( process.env.MARIA_DB, process.env.MARIA_USR, process.env.MARIA_PASS, {
+    host: process.env.MARIA_HOST,
+    dialect: 'mysql',
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 10000
+    },
+    logging: false
+  });
+
+
 } else {
+  // TODO: USE HEROKU VARIABLES
   mongoose.connect(process.env.MONGODB_URI,  function (err, database) {
     if (err) {
       console.log(err);
@@ -18,12 +30,38 @@ if(NODE_ENV === 'development') {
   })
 }
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'conection error: '))
-db.once('open', ()=>{
-  console.log('database conecction 👍🏼')
+
+// Tables
+const Product = sequelize.define('product', {
+  name: Sequelize.STRING,
+  price: Sequelize.DECIMAL
 })
 
-mongoose.Promise = global.Promise
+const Order = sequelize.define('order', {
+  totalPrice: Sequelize.DECIMAL,
+}, {
+  instanceMethods: {
+    getTotalPrice: function(prices){      
+      let total = 0      
+      prices.length !== 0 ? prices.forEach(price => total += price ) : 0   
+      return total      
+    }
+  }
+})
 
-module.export =db
+const Customer = sequelize.define('customer', {
+  clientName: Sequelize.STRING,
+})
+
+// TODO: Relations
+Order.hasMany(Product, {
+  foreignKey: 'productID',
+})
+
+
+sequelize.sync();
+
+exports.sequelize = sequelize
+exports.Product = Product
+exports.Order = Order
+exports.Customer = Customer

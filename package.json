@@ -16,6 +16,8 @@
     "express": "^4.14.0",
     "glob": "^7.1.1",
     "mongoose": "^4.11.9",
-    "sequelize": "^4.8.4"
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.8.4",
+    "sequelize-cli": "^3.0.0-3"
   }
 }

@@ -1,17 +1,14 @@
-var mongoose = require('mongoose');
-
-var orderSchema = mongoose.Schema({
-  product_id: [{type:  mongoose.Schema.Types.ObjectId, ref: 'Product'}],
-  total_price: {type: Number, default: 0}
-})
-
-
-orderSchema.methods.getTotalPrice = function(prices){
-
-  let total = 0      
-  prices.length !== 0 ? prices.forEach(price => total += price ) : 0   
-  return total
-
+module.exports = (sequelize, DataTypes) => {
+  const Order = sequelize.define('order', {
+    totalPrice: DataTypes.DECIMAL,
+  }, {
+    instanceMethods: {
+      getTotalPrice: function(prices){      
+        let total = 0      
+        prices.length !== 0 ? prices.forEach(price => total += price ) : 0   
+        return total      
+      }
+    }
+  })
+  return Order
 }
-
-module.exports = mongoose.model('Order', orderSchema)

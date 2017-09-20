@@ -10,11 +10,11 @@ module.exports = (app) => {
   app.use(bodyParser.json())
 
 
-  const models = glob.sync(__dirname + '/models/*.js')
-  console.log("models!!!!!!->>> ",models)
-  models.forEach( (modelFileName) => {
-    require(modelFileName)
-  });
+  // const models = glob.sync(__dirname + '/models/*.js')
+  // console.log("models!!!!!!->>> ",models)
+  // models.forEach( (modelFileName) => {
+  //   require(modelFileName)
+  // });
 
   const controllers = glob.sync(__dirname + '/controllers/*.js')
 

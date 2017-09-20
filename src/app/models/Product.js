@@ -1,8 +1,5 @@
-var mongoose = require('mongoose')
+const db = require('../db')
 
-var productSchema = mongoose.Schema({
-  name: String,
-  price: {type: Number}
-})
-
-module.exports = mongoose.model('Product', productSchema)
+exports.findAll = (success, err) => {
+  db.Product.findAll().then(success).catch(err);
+}
